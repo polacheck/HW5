@@ -1,13 +1,5 @@
 
 def findNextOpr(txt):
-    """
-        >>> findNextOpr('  3*   4 - 5')
-        3
-        >>> findNextOpr('8   4 - 5')
-        6
-        >>> findNextOpr('89 4 5')
-        -1
-    """
     if not isinstance(txt,str) or len(txt)<=0:
         return "error: findNextOpr"
 
@@ -34,16 +26,6 @@ def findNextOpr(txt):
 
 
 def isNumber(txt):
-    """
-        >>> isNumber('1   2 3')
-        False
-        >>> isNumber('-  156.3')
-        False
-        >>> isNumber('     29.99999999    ')
-        True
-        >>> isNumber('    5.9999x ')
-        False
-    """
     if not isinstance(txt, str) or len(txt)==0:
         return "error: isNumber"
     # --- YOU CODE STARTS HERE
@@ -55,17 +37,6 @@ def isNumber(txt):
 
 
 def getNextNumber(expr, pos):
-    """
-        >>> getNextNumber('8  +    5    -2',0)
-        (8.0, '+', 3)
-        >>> getNextNumber('8  +    5    -2',4)
-        (5.0, '-', 13)
-        >>> getNextNumber('4.5 + 3.15         /  -5',20)
-        (-5.0, None, None)
-        >>> getNextNumber('4.5 + 3.15         /   5',10)
-        (None, '/', 19)
-    """
-
     if not isinstance(expr, str) or not isinstance(pos, int) or len(expr)==0 or pos<0 or pos>=len(expr):
         return None, None, "error: getNextNumber"
     # --- YOU CODE STARTS HERE
@@ -168,7 +139,7 @@ def postfix(expr):
             return postfix
         postfix.append(str(number))
         if opr is not None:
-            while S is not empty:
+            while S is not S.isEmpty():
                 if precedence[opr] > precedence[S.peek()]:
                     break
                 else:
@@ -180,7 +151,7 @@ def postfix(expr):
                 return ' '.join(postfix)
         pos = oprPos+1
 
-
+#"""
 def calculator(expr):
     if not isinstance(expr, str) or len(expr) <= 0:
         return 'input error in calculation'
@@ -193,7 +164,7 @@ def calculator(expr):
         if pos == -1:
             if expr.find(')') == -1:
                 if s.isEmpty():
-                    return _calculator(expr)
+                    return evaluate(expr)
                 else:
                     return 'error 1'
             else:
@@ -202,13 +173,13 @@ def calculator(expr):
                 else:
                     x = s.pop()
                     y = expr.find(')')
-                    expr = expr[:x] + str(_calculator(expr[x+1:y])) + expr[y+1:]
+                    expr = expr[:x] + str(evaluate(expr[x+1:y])) + expr[y+1:]
         else:
             if expr[pos:].find(')') == -1:
                 return 'error 4'
             else:
                 if expr[pos+1].find('(') == -1:
-                    expr = expr[:pos] + str(_calculator(expr[pos+1:expr[pos+1].find(")")+pos+1]))+expr[expr[pos+1:].find(")")+pos+2:]
+                    expr = expr[:pos] + str(evaluate(expr[pos+1:expr[pos+1].find(")")+pos+1]))+expr[expr[pos+1:].find(")")+pos+2:]
 
                     if s.isEmpty():
                         pos-=1
@@ -219,14 +190,14 @@ def calculator(expr):
                         s.push(pos)
                         pos = pos + 1 + expr[pos+1:].find('(')
                     else:
-                        expr = expr[:pos] + str(_calculator(expr[pos+1:expr[pos+1].find(")")+pos+1]))+expr[expr[pos+1:].find(")")+pos+2:] 
+                        expr = expr[:pos] + str(evaluate(expr[pos+1:expr[pos+1].find(")")+pos+1]))+expr[expr[pos+1:].find(")")+pos+2:] 
                         if s.isEmpty():
                             pos = pos + 1 + expr[pos+1:].find('(')
                         else:
                             pos = s.pop()
+#"""
 
-
-def _calculator(expr):
+def evaluate(expr):
     if len(expr) <= 0 or not isinstance(expr,str):
         return "input error A"
     expr = expr.strip()
@@ -315,3 +286,22 @@ def _calculator(expr):
                     addResult = expResult
         opr = newOpr
         pos = oprPos + 1
+
+
+def exeOpr(num1, opr, num2):
+    if opr == "+":
+        return num1 + num2
+    elif opr == "-":
+        return num1 - num2
+    elif opr == "*":
+        return num1 * num2
+    elif opr == "/":
+        if num2 == 0:
+            return "error"
+        else:
+            return num1 / num2
+    elif opr == "^":
+        return num1 ** num2
+    else:
+        return "error"
+    
