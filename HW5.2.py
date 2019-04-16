@@ -140,10 +140,10 @@ def postfix(expr):
         postfix.append(str(number))
         if opr is not None:
             while S is not S.isEmpty():
-                if precedence[opr] > precedence[S.peek()]:
+                if precedence[str(opr)] > precedence[str(S.peek())]:
                     break
                 else:
-                    postfix1.append(S.pop())
+                    postfix.append(S.pop())
             S.push(opr)
         else:
             while S is not S.isEmpty():
