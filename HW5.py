@@ -159,49 +159,6 @@ def new_split_iter( expr ):
       else:
          pos += 1
 
-class Stack:
-    def __init__(self):
-        self.top = None
-        self.count = 0
-    
-    def __str__(self):
-        temp=self.top
-        out=[]
-        while temp:
-            out.append(str(temp.value))
-            temp=temp.next
-        out='\n'.join(out)
-        return ('Top:{}\nStack:\n{}'.format(self.top,out))
-
-    __repr__=__str__
-
-    def isEmpty(self):
-        return(self.top is None)
-
-    def __len__(self):
-        return(self.count)
-    
-    def peek(self):
-        if self.top == None:
-            return None
-        else:
-            return(self.top)
-        
-    def push(self,value):
-        new = Node(value)
-        self.top = new.next
-        self.top = new
-        self.count = self.count + 1
-        return
-        
-    def pop(self):
-        if self.top is None:
-            return None
-        else:
-            topval = self.top
-            self.top = self.top.next
-            self.count = self.count - 1
-            return(topval)
 
 def findNextOpr(txt):
     """
