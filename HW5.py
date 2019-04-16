@@ -159,7 +159,7 @@ def new_split_iter( expr ):
       else:
          pos += 1
 
-
+################################################ Here Down is Ours #####################
 def findNextOpr(txt):
     """
         >>> findNextOpr('  3*   4 - 5')
