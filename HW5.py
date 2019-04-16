@@ -342,5 +342,51 @@ def postfix(expr):
         pos = oprPos+1
 
 
+def calculator(expr):
+    if not isinstance(expr, str) or len(expr) <= 0:
+        return 'input error in calculation'
+
+    expr = expr.strip()
+    s = Stack()
+
+    pos = expr.find('(')
+    while True:
+        if pos == -1:
+            if expr.find(')') == -1:
+                if s.isEmpty():
+                    return 'calc function'
+                else:
+                    return 'error 1'
+            else:
+                if s.isEmpty()
+                    return 'error 2'
+                else:
+                    x = s.pop()
+                    y = expr.find(')')
+                    #expr = expr[:x] +
+                    print("insert calc function")
+        else:
+            if expr[pos:].find(')') == -1:
+                return 'error 4'
+            else:
+                if expr[pos+1].find('(') == -1:
+                    print("insert calc function")
+
+                    if s.isEmpty():
+                        pos-=1
+                    else:
+                        pos = s.pop()
+                else:
+                    if expr[pos+1].find(')')>expr[pos+1:].find('('):
+                        s.push(pos)
+                        pos = pos + 1 + expr[pos+1:].find('(')
+                    else:
+                        print("insert calc function")
+                        if s.isEmpty():
+                            pos = pos + 1 + expr[pos+1:].find('(')
+                        else:
+                            pos = s.pop()
+
+
 
 
