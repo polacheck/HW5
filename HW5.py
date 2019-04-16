@@ -387,6 +387,95 @@ def calculator(expr):
                         else:
                             pos = s.pop()
 
+def _calculator(expr):
+    if len(expr) <= 0 or not isinstance(expr,str):
+        return "input error A"
+    expr = expr.strip()
+    if expr[0] == "-":
+        expr = "0 " + expr
+    newNumber, newOpr, oprPos = getNextNumber(expr, 0)
+
+    if newNumber is None:
+        return "Input error B"
+    elif newOpr is None:
+        return newNumber
+    elif newOpr == "+" or newOpr == "-":
+        mode = "add"
+        addResult = newNumber
+    elif newOpr == "*" or newOpr == "/":
+        mode = "mul"
+        addResult = 0
+        mulResult = newNumber
+        addLastOpr = "+"
+    elif newOpr == "^":
+        mode = "exp"
+        addResult = 0
+        mulResult = 1
+        addLastOpr = "+"
+        mulLastOpr = "*"
+        expResult = newNumber
+        LastOpr = None
+    pos = oprPos + 1
+    opr = newOpr
+    
+    while True:
+        newNumber, newOpr, oprPos = getNextNumber(expr,pos)
+        if newNumber is None:
+            return "error message"
+        elif mode == "add":
+            if newOpr is None:
+                return exeOpr(addResult, opr, newNumber)
+            elif newOpr == "+" or newOpr == "-":
+                addResult = exeOpr(addResult, opr, newNumber)
+            elif newOpr == "*" or newOpr == "/":
+                mode = "mul"
+                mulResult = newNumber
+                addLastOpr = opr
+                LastOpr = opr
+            elif newOpr == "^":
+                mode = "exp"
+                expResult = newNumber
+                addLastOpr = opr
+                LastOpr = opr
+        elif mode == "mul":
+            if newOpr is None:
+                mulResult = exeOpr(mulResult, opr, newNumber)
+                return exeOpr(addResult, addLastOpr, mulResult)
+            elif newOpr == "+" or newOpr == "-":
+                mode = "add"
+                mulResult = exeOpr(mulResult, opr, newNumber)
+                addResult = exeOpr(addResult, addLastOpr, mulResult)
+            elif newOpr == "*" or newOpr == "/":
+                mulResult = exeOpr(mulResult, opr, newNumber)
+            elif newOpr == "^":
+                mode = "exp"
+                expResult = newNumber
+                mulLastOpr = opr
+                LastOpr = opr
+        elif mode == "exp":
+            expResult = exeOpr(expResult, opr, newNumber)
+            if newOpr is None:
+                if LastOpr == "*" or LastOpr == "/" or LastOpr == None:
+                    mulResult = exeOpr(mulResult, mulLastOpr, expResult)
+                    return exeOpr(addResult, addLastOpr, mulResult)
+                if LastOpr == "+" or LastOpr == "-":
+                    return exeOpr(addResult, addLastOpr, expResult)
+            elif newOpr == "*" or newOpr == "/":
+                mode = "mul"
+                if LastOpr == "*" or LastOpr == "/":
+                    mulResult = exeOpr(mulResult, mulLastOpr, expResult)
+                else:
+                    mulResult = expResult
+            elif newOpr == "+" or newOpr == "-":
+                mode = "add"
+                if LastOpr == "*" or LastOpr == "/":
+                    addResult = exeOpr(mulResult, mulLastOpr, expResult)
+                elif LastOpr == "+" or LastOpr == "-":
+                    addResult = exeOpr(addResult, addLastOpr, expResult)
+                else:
+                    addResult = expResult
+        opr = newOpr
+        pos = oprPos + 1
 
 
 
