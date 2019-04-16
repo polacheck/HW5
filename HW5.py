@@ -358,7 +358,7 @@ def calculator(expr):
                 else:
                     return 'error 1'
             else:
-                if s.isEmpty()
+                if s.isEmpty():
                     return 'error 2'
                 else:
                     x = s.pop()
