@@ -120,7 +120,7 @@ class Stack:
             self.count = self.count - 1
             return(topval.value)
 
-
+"""
 def postfix(expr):
     number, opr, oprPos = getNextNumber(expr, 0)
     if number is None:
@@ -150,8 +150,93 @@ def postfix(expr):
                 postfix.append(S.pop())
                 return ' '.join(postfix)
         pos = oprPos+1
+"""
+def postfix(expr):
+    openP = expr.count('(')
+    closeP = expr.count(')')
+    if openP != closeP:
+        return "error, invalid expression parenthesis"
 
-#"""
+    if not isinstance(expr, str) or len(expr) == 0:
+        return "error, invalid expression length"
+
+    precedence={'+':1,'-':1,'*':2,'/':2,'^':3,'(':0,')':0}
+    printable = ''
+    pos = 0
+
+    opStack = Stack()
+
+    while True:
+        #print("1")
+        try:
+            validation = getNextNumber(expr, pos)
+            #print("3")
+            currNum, currOp, opPos = getNextNumber(expr, pos)
+            #print("fuck", currNum)
+        except:
+            return "error, invalid expression 1"
+
+        if currNum == None:
+            #print(currNum, currOp, opPos)
+            return "error, invalid expression 2"
+
+        else:
+            if currOp == None:
+                if currNum != None:
+                    printable += str(currNum) + " "
+
+                    while opStack.isEmpty() == False:
+                        if opStack.peek() != "(":
+                            printable += opStack.pop() + " "
+                        else:
+                            opStack.pop()
+                break
+            else:
+                operators = ['+','-','*','/','^']
+                if expr[-1] in operators:
+                    return "error, invalid expression 3"
+                currNum = validation[0]
+                currOp = validation[1]
+                initPos = pos
+                pos = validation[2] + 1
+                
+        if currNum != None:
+            if len(printable) == 0:
+                printable = str(currNum) + " "
+            else:
+                printable += str(currNum) + " "
+        if '(' in expr[initPos:opPos]:
+            numParenthesis = expr[initPos:opPos].count('(')
+            for paren in range(numParenthesis):
+                opStack.push('(')
+        if ')' in expr[initPos:opPos]:
+            numclosed = expr[initPos:oprPos].count(')')
+            for count in range(numclosed):
+                while opStack.peek() != '(':
+                    printable = printable + str(opStack.pop()) + " "
+                opStack.pop()
+
+        if currOp != None:
+            if opStack.isEmpty():
+                opStack.push(currOp)
+            else:
+                
+                while (precedence[str(currOp)] <= precedence[str(opStack.peek())]):
+                    #print(currNum, currOp, opStack.peek())
+                    printable = printable + str(opStack.pop()) + " "
+
+                    if opStack.peek() == None:
+                        break
+                opStack.push(currOp)
+    printable = printable.strip()
+
+    return printable
+                
+    
+
+
+
+
 def calculator(expr):
     if not isinstance(expr, str) or len(expr) <= 0:
         return 'input error in calculation'
