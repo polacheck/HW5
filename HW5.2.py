@@ -1,4 +1,4 @@
-
+"""
 def findNextOpr(txt):
     if not isinstance(txt,str) or len(txt)<=0:
         return "error: findNextOpr"
@@ -63,8 +63,8 @@ def getNextNumber(expr, pos):
         return float(newNumber), nextOpr, oprPos
     else:
         return None, nextOpr, oprPos
-
-
+"""
+"""
 class Node:
     def __init__(self, value):
         self.value = value  
@@ -103,14 +103,15 @@ class Stack:
             return None
         else:
             return(self.top)
-        
+   
     def push(self,value):
         new = Node(value)
         self.top = new.next
         self.top = new
         self.count = self.count + 1
         return
-        
+
+
     def pop(self):
         if self.top is None:
             return None
@@ -119,7 +120,7 @@ class Stack:
             self.top = self.top.next
             self.count = self.count - 1
             return(topval.value)
-
+"""
 """
 def postfix(expr):
     number, opr, oprPos = getNextNumber(expr, 0)
@@ -172,12 +173,12 @@ def postfix(expr):
             validation = getNextNumber(expr, pos)
             #print("3")
             currNum, currOp, opPos = getNextNumber(expr, pos)
-            #print("fuck", currNum)
+            print("fuck", currNum, currOp, opPos)
         except:
             return "error, invalid expression 1"
 
         if currNum == None:
-            #print(currNum, currOp, opPos)
+            print(currNum, currOp, opPos)
             return "error, invalid expression 2"
 
         else:
@@ -206,11 +207,11 @@ def postfix(expr):
             else:
                 printable += str(currNum) + " "
         if '(' in expr[initPos:opPos]:
-            numParenthesis = expr[initPos:opPos].count('(')
+            numParenthesis = expr[initPos:opPos].count("(")
             for paren in range(numParenthesis):
                 opStack.push('(')
         if ')' in expr[initPos:opPos]:
-            numclosed = expr[initPos:oprPos].count(')')
+            numclosed = expr[initPos:opPos].count(")")
             for count in range(numclosed):
                 while opStack.peek() != '(':
                     printable = printable + str(opStack.pop()) + " "
@@ -390,3 +391,200 @@ def exeOpr(num1, opr, num2):
     else:
         return "error"
     
+def findNextOpr(txt):
+
+    if not isinstance(txt,str) or len(txt)<=0:
+        return "error: findNextOpr"
+
+    # --- YOU CODE STARTS HERE
+    operator = ['+', '-', '^', '/', '*']
+    for n in range(len(txt)):
+
+        if txt[n] in operator:
+
+            #if txt[n] == '-':
+
+                #if txt[n+1] != " ":
+                    #continue
+            return n
+    return -1
+
+def isNumber(txt):
+
+    if not isinstance(txt, str) or len(txt)==0:
+        return "error: isNumber"
+    # --- YOU CODE STARTS HERE
+    StripTxt = txt.strip()
+    try:
+        test = float(StripTxt)
+        return True
+    except:
+        return False
+
+def getNextNumber(expr, pos):
+
+    if not isinstance(expr, str) or not isinstance(pos, int) or len(expr)==0 or pos<0 or pos>=len(expr):
+        return None, None, "error: getNextNumber"
+    # --- YOU CODE STARTS HERE
+    expr.strip('(')
+    expr.strip(')')
+    newExpr = expr[pos:]
+    operPos = findNextOpr(newExpr)
+    subExpr = newExpr.strip()
+
+
+    if subExpr[0] == '-':
+        minus_pos = findNextOpr(newExpr) + pos
+        operPos = findNextOpr(expr[(minus_pos+1):])
+
+
+        if operPos != -1:
+            operPos = operPos + minus_pos + 1 - pos
+
+    else:
+        operPos = findNextOpr(expr[pos:])
+
+    if operPos != -1:
+        operPos = operPos + pos
+        newOper = expr[operPos]
+        newNumber = expr[pos:operPos]
+
+    else:
+        operPos = None
+        newOper = None
+        newNumber = expr[pos:]
+
+
+    if isNumber(newNumber):
+        return float(newNumber), newOper, operPos
+    else:
+        return None, newOper, operPos
+
+
+def calculator2(expr):
+    L = []
+    L = expr.split(" ")
+    print(expr)
+    S = Stack()
+    for a in L:
+        if isNumber(a) is True:
+            a = float(a)
+            S.push(a)
+            print(S)
+        
+        
+        #op1, op2 = S.pop(), S.pop()
+
+        if a == '+':
+            print("+")
+            op1, op2 = S.pop(), S.pop()
+            S.push(op2 + op1)
+        elif a == '-':
+            print("-")
+            op1, op2 = S.pop(), S.pop()
+            S.push(op2 - op1)
+        elif a == '*':
+            print("*")
+            op1, op2 = S.pop(), S.pop()
+            S.push(op2 * op1)
+        elif a == '/':
+            print("/")
+            op1, op2 = S.pop(), S.pop()
+            if op1 == 0:
+                return "error division by zero"
+            else:
+                S.push(op2 / op1)
+        elif a == '^':
+            print("^")
+            op1, op2 = S.pop(), S.pop()
+            S.push(op2 ** op1)
+
+    return S.pop()
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+    def __str__(self):
+        return "Node({})".format(self.value)
+
+    __repr__ = __str__
+
+
+class Stack:
+
+    def __init__(self):
+        self.top = None
+        self.count = 0
+
+    def __str__(self):
+        temp = self.top
+        out = []
+        while temp:
+            out.append(str(temp.value))
+            temp = temp.next
+        out = '\n'.join(out)
+        return ('Top:{}\nStack:\n{}'.format(self.top, out))
+
+    __repr__ = __str__
+
+    def isEmpty(self):
+        # write your code here
+        if not self.top:
+            return True
+        else:
+            return False
+
+    def __len__(self):
+        # write your code here
+        curr = self.top
+
+        while curr:
+            self.count += 1
+            curr = curr.next
+
+    def peek(self):
+        # write your code here
+        if self.isEmpty():
+            return None
+        else:
+            return self.top.value
+
+    def push(self, value):
+        # write your code here
+        new_node = Node(value)
+        self.count += 1
+
+        if self.isEmpty():
+            self.top = new_node
+            return
+        else:
+            curr = self.top
+            last = None
+
+            while curr.value > new_node.value:
+                last = curr
+                curr = curr.next
+
+                if not curr: break
+
+            if not last:
+                new_node.next = self.top
+                self.top = new_node
+                return
+
+            if curr:
+                last.next = new_node
+                new_node.next = curr
+            return
+
+    def pop(self):
+        # write your code here
+        if self.isEmpty():
+            return None
+
+        else:
+            curr = self.top.value
+            self.top = self.top.next
+            return curr
